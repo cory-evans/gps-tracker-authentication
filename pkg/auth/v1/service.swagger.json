@@ -16,6 +16,217 @@
     "application/json"
   ],
   "paths": {
+    "/device/create": {
+      "post": {
+        "operationId": "AuthService_CreateDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateDeviceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateDeviceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/device/{deviceId}": {
+      "get": {
+        "operationId": "AuthService_GetDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetDeviceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/device/{deviceId}/edit": {
+      "post": {
+        "operationId": "AuthService_EditDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1EditDeviceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "deviceName": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/signin": {
+      "post": {
+        "operationId": "AuthService_SignIn",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SignInResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1SignInRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
+    "/signout": {
+      "post": {
+        "operationId": "AuthService_SignOut",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SignOutResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "AuthService"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/user/create": {
+      "post": {
+        "operationId": "AuthService_CreateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
     "/user/{id}": {
       "get": {
         "operationId": "AuthService_GetUser",
@@ -43,6 +254,11 @@
         ],
         "tags": [
           "AuthService"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
         ]
       }
     }
@@ -75,6 +291,77 @@
         }
       }
     },
+    "v1CreateDeviceRequest": {
+      "type": "object",
+      "properties": {
+        "deviceName": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateDeviceResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "device": {
+          "$ref": "#/definitions/v1Device"
+        }
+      }
+    },
+    "v1CreateUserRequest": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateUserResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/v1User"
+        }
+      }
+    },
+    "v1Device": {
+      "type": "object",
+      "properties": {
+        "deviceId": {
+          "type": "string"
+        },
+        "ownerId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "v1EditDeviceResponse": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "$ref": "#/definitions/v1Device"
+        }
+      }
+    },
+    "v1GetDeviceResponse": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "$ref": "#/definitions/v1Device"
+        }
+      }
+    },
     "v1GetUserResponse": {
       "type": "object",
       "properties": {
@@ -83,13 +370,56 @@
         }
       }
     },
-    "v1User": {
+    "v1SignInRequest": {
       "type": "object",
       "properties": {
-        "id": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
           "type": "string"
         }
       }
+    },
+    "v1SignInResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        }
+      }
+    },
+    "v1SignOutResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "v1User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
   }
 }
