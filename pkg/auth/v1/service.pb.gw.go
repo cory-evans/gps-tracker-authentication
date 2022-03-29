@@ -335,12 +335,13 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/GetUser", runtime.WithHTTPPathPattern("/user/{id}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/GetUser", runtime.WithHTTPPathPattern("/user/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AuthService_GetUser_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AuthService_GetUser_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -358,12 +359,13 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/CreateUser", runtime.WithHTTPPathPattern("/user/create"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/CreateUser", runtime.WithHTTPPathPattern("/user/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AuthService_CreateUser_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AuthService_CreateUser_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -381,12 +383,13 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/SignIn", runtime.WithHTTPPathPattern("/signin"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/SignIn", runtime.WithHTTPPathPattern("/signin"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AuthService_SignIn_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AuthService_SignIn_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -404,12 +407,13 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/SignOut", runtime.WithHTTPPathPattern("/signout"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/SignOut", runtime.WithHTTPPathPattern("/signout"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AuthService_SignOut_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AuthService_SignOut_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -427,12 +431,13 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/CreateDevice", runtime.WithHTTPPathPattern("/device/create"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/CreateDevice", runtime.WithHTTPPathPattern("/device/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AuthService_CreateDevice_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AuthService_CreateDevice_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -450,12 +455,13 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/GetDevice", runtime.WithHTTPPathPattern("/device/{device_id}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/GetDevice", runtime.WithHTTPPathPattern("/device/{device_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AuthService_GetDevice_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AuthService_GetDevice_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -473,12 +479,13 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/EditDevice", runtime.WithHTTPPathPattern("/device/{device_id}/edit"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pkg.auth.v1.AuthService/EditDevice", runtime.WithHTTPPathPattern("/device/{device_id}/edit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AuthService_EditDevice_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AuthService_EditDevice_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -535,12 +542,13 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/GetUser", runtime.WithHTTPPathPattern("/user/{id}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/GetUser", runtime.WithHTTPPathPattern("/user/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AuthService_GetUser_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_AuthService_GetUser_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -555,12 +563,13 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/CreateUser", runtime.WithHTTPPathPattern("/user/create"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/CreateUser", runtime.WithHTTPPathPattern("/user/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AuthService_CreateUser_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_AuthService_CreateUser_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -575,12 +584,13 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/SignIn", runtime.WithHTTPPathPattern("/signin"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/SignIn", runtime.WithHTTPPathPattern("/signin"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AuthService_SignIn_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_AuthService_SignIn_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -595,12 +605,13 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/SignOut", runtime.WithHTTPPathPattern("/signout"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/SignOut", runtime.WithHTTPPathPattern("/signout"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AuthService_SignOut_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_AuthService_SignOut_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -615,12 +626,13 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/CreateDevice", runtime.WithHTTPPathPattern("/device/create"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/CreateDevice", runtime.WithHTTPPathPattern("/device/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AuthService_CreateDevice_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_AuthService_CreateDevice_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -635,12 +647,13 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/GetDevice", runtime.WithHTTPPathPattern("/device/{device_id}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/GetDevice", runtime.WithHTTPPathPattern("/device/{device_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AuthService_GetDevice_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_AuthService_GetDevice_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -655,12 +668,13 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/EditDevice", runtime.WithHTTPPathPattern("/device/{device_id}/edit"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pkg.auth.v1.AuthService/EditDevice", runtime.WithHTTPPathPattern("/device/{device_id}/edit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AuthService_EditDevice_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_AuthService_EditDevice_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
