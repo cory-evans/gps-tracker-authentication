@@ -25,6 +25,7 @@ type AuthServiceClient interface {
 	CreateDevice(ctx context.Context, in *CreateDeviceRequest, opts ...grpc.CallOption) (*CreateDeviceResponse, error)
 	GetDevice(ctx context.Context, in *GetDeviceRequest, opts ...grpc.CallOption) (*GetDeviceResponse, error)
 	EditDevice(ctx context.Context, in *EditDeviceRequest, opts ...grpc.CallOption) (*EditDeviceResponse, error)
+	GetOwnedDevices(ctx context.Context, in *GetOwnedDevicesRequest, opts ...grpc.CallOption) (*GetOwnedDevicesResponse, error)
 }
 
 type authServiceClient struct {
@@ -98,6 +99,15 @@ func (c *authServiceClient) EditDevice(ctx context.Context, in *EditDeviceReques
 	return out, nil
 }
 
+func (c *authServiceClient) GetOwnedDevices(ctx context.Context, in *GetOwnedDevicesRequest, opts ...grpc.CallOption) (*GetOwnedDevicesResponse, error) {
+	out := new(GetOwnedDevicesResponse)
+	err := c.cc.Invoke(ctx, "/pkg.auth.v1.AuthService/GetOwnedDevices", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -109,6 +119,7 @@ type AuthServiceServer interface {
 	CreateDevice(context.Context, *CreateDeviceRequest) (*CreateDeviceResponse, error)
 	GetDevice(context.Context, *GetDeviceRequest) (*GetDeviceResponse, error)
 	EditDevice(context.Context, *EditDeviceRequest) (*EditDeviceResponse, error)
+	GetOwnedDevices(context.Context, *GetOwnedDevicesRequest) (*GetOwnedDevicesResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -136,6 +147,9 @@ func (UnimplementedAuthServiceServer) GetDevice(context.Context, *GetDeviceReque
 }
 func (UnimplementedAuthServiceServer) EditDevice(context.Context, *EditDeviceRequest) (*EditDeviceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditDevice not implemented")
+}
+func (UnimplementedAuthServiceServer) GetOwnedDevices(context.Context, *GetOwnedDevicesRequest) (*GetOwnedDevicesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOwnedDevices not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -276,6 +290,24 @@ func _AuthService_EditDevice_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_GetOwnedDevices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOwnedDevicesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetOwnedDevices(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pkg.auth.v1.AuthService/GetOwnedDevices",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetOwnedDevices(ctx, req.(*GetOwnedDevicesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -310,6 +342,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditDevice",
 			Handler:    _AuthService_EditDevice_Handler,
+		},
+		{
+			MethodName: "GetOwnedDevices",
+			Handler:    _AuthService_GetOwnedDevices_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

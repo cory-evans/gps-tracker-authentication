@@ -136,6 +136,33 @@
         ]
       }
     },
+    "/devices": {
+      "get": {
+        "operationId": "AuthService_GetOwnedDevices",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetOwnedDevicesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "AuthService"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/signin": {
       "post": {
         "operationId": "AuthService_SignIn",
@@ -359,6 +386,17 @@
       "properties": {
         "device": {
           "$ref": "#/definitions/v1Device"
+        }
+      }
+    },
+    "v1GetOwnedDevicesResponse": {
+      "type": "object",
+      "properties": {
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Device"
+          }
         }
       }
     },

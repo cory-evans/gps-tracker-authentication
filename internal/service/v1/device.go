@@ -95,3 +95,36 @@ func (s *AuthService) EditDevice(ctx context.Context, req *authv1.EditDeviceRequ
 
 	return &authv1.EditDeviceResponse{}, nil
 }
+
+func (s *AuthService) GetOwnedDevices(ctx context.Context, req *authv1.GetOwnedDevicesRequest) (*authv1.GetOwnedDevicesResponse, error) {
+	// check is authenticated
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Errorf(codes.Unauthenticated, "Not Authenticated")
+	}
+	userID := jwtauthv1.GetUserIdFromMetadata(md)
+
+	devicesCol := s.DB.Collection("devices")
+
+	cur, err := devicesCol.Find(ctx, bson.M{"OwnerId": userID})
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "%v", err)
+	}
+
+	var devices = make([]*authv1.Device, 0)
+
+	for cur.Next(ctx) {
+		var d modelsv1.Device
+		err = cur.Decode(&d)
+		if err != nil {
+			// TODO: Log error here
+			continue
+		}
+
+		devices = append(devices, d.AsProtoBuf())
+	}
+
+	return &authv1.GetOwnedDevicesResponse{
+		Devices: devices,
+	}, nil
+}

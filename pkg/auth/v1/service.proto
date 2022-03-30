@@ -108,6 +108,19 @@ service AuthService {
 			}
 		};
 	}
+	rpc GetOwnedDevices(GetOwnedDevicesRequest) returns (GetOwnedDevicesResponse) {
+		option (google.api.http) = {
+			get: "/devices"
+		};
+		option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+			security: {
+				security_requirement: {
+					key: "ApiKeyAuth",
+					value: {}
+				}
+			}
+		};
+	}
 }
 
 
@@ -189,4 +202,9 @@ message EditDeviceRequest {
 
 message EditDeviceResponse {
 	Device device = 1;
+}
+
+message GetOwnedDevicesRequest {}
+message GetOwnedDevicesResponse {
+	repeated Device devices = 1;
 }
