@@ -4,6 +4,10 @@ import (
 	authv1 "github.com/cory-evans/gps-tracker-authentication/pkg/auth/v1"
 )
 
+const (
+	USER_COLLECTION = "user"
+)
+
 type User struct {
 	UserId       string `json:"user_id" bson:"UserId"`
 	DisplayName  string `json:"display_name" bson:"DisplayName"`

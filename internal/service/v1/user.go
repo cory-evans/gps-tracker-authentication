@@ -13,7 +13,7 @@ import (
 )
 
 func (s *AuthService) GetUserByMongoID(ctx context.Context, id interface{}) *modelsv1.User {
-	users := s.DB.Collection("user")
+	users := s.DB.Collection(modelsv1.USER_COLLECTION)
 
 	var user modelsv1.User
 	users.FindOne(ctx, bson.M{"_id": id}).Decode(&user)
@@ -21,7 +21,7 @@ func (s *AuthService) GetUserByMongoID(ctx context.Context, id interface{}) *mod
 }
 
 func (s *AuthService) GetUser(ctx context.Context, req *authv1.GetUserRequest) (*authv1.GetUserResponse, error) {
-	users := s.DB.Collection("user")
+	users := s.DB.Collection(modelsv1.USER_COLLECTION)
 
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
@@ -42,7 +42,7 @@ func (s *AuthService) GetUser(ctx context.Context, req *authv1.GetUserRequest) (
 }
 
 func (s *AuthService) CreateUser(ctx context.Context, req *authv1.CreateUserRequest) (*authv1.CreateUserResponse, error) {
-	users := s.DB.Collection("user")
+	users := s.DB.Collection(modelsv1.USER_COLLECTION)
 
 	userId, err := uuid.NewUUID()
 	if err != nil {

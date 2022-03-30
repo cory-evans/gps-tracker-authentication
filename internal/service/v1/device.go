@@ -21,10 +21,10 @@ func (s *AuthService) GetDevice(ctx context.Context, req *authv1.GetDeviceReques
 
 	userId := jwtauthv1.GetUserIdFromMetadata(md)
 
-	devicesCol := s.DB.Collection("devices")
+	devicesCol := s.DB.Collection(modelsv1.DEVICE_COLLECTION)
 
 	var device modelsv1.Device
-	result := devicesCol.FindOne(ctx, bson.M{"DeviceId": req.DeviceId, "OwnerId": userId})
+	result := devicesCol.FindOne(ctx, bson.M{"device_id": req.DeviceId, "owner_id": userId})
 	err := result.Decode(&device)
 
 	if err != nil {
@@ -48,28 +48,31 @@ func (s *AuthService) CreateDevice(ctx context.Context, req *authv1.CreateDevice
 		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
 	}
 
+	deviceName := req.GetDeviceName()
+	if deviceName == "" {
+		return nil, status.Error(codes.InvalidArgument, "Device name can't be none")
+	}
+
 	deviceID, err := uuid.NewUUID()
 	if err != nil {
 		return nil, err
 	}
 
-	devicesCol := s.DB.Collection("devices")
-	result, err := devicesCol.InsertOne(ctx, modelsv1.Device{
+	devicesCol := s.DB.Collection(modelsv1.DEVICE_COLLECTION)
+	dev := modelsv1.Device{
 		Id:      deviceID.String(),
 		OwnerId: userId,
 		Name:    req.GetDeviceName(),
-	})
+	}
+	result, err := devicesCol.InsertOne(ctx, dev)
 
 	if err != nil || result.InsertedID == nil {
 		return nil, status.Errorf(codes.Internal, "failed to create device")
 	}
 
 	return &authv1.CreateDeviceResponse{
-		Device: &authv1.Device{
-			DeviceId: deviceID.String(),
-			OwnerId:  userId,
-			Name:     req.GetDeviceName(),
-		},
+		Token:  "TODO",
+		Device: dev.AsProtoBuf(),
 	}, nil
 }
 
@@ -85,7 +88,7 @@ func (s *AuthService) EditDevice(ctx context.Context, req *authv1.EditDeviceRequ
 		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
 	}
 
-	devicesCol := s.DB.Collection("devices")
+	devicesCol := s.DB.Collection(modelsv1.DEVICE_COLLECTION)
 
 	result := devicesCol.FindOneAndUpdate(ctx, bson.M{"DeviceId": req.GetDeviceId(), "OwnerId": userId}, bson.M{"$set": bson.M{"Name": req.GetDeviceName()}})
 
@@ -102,11 +105,15 @@ func (s *AuthService) GetOwnedDevices(ctx context.Context, req *authv1.GetOwnedD
 	if !ok {
 		return nil, status.Errorf(codes.Unauthenticated, "Not Authenticated")
 	}
-	userID := jwtauthv1.GetUserIdFromMetadata(md)
+	userId := jwtauthv1.GetUserIdFromMetadata(md)
 
-	devicesCol := s.DB.Collection("devices")
+	if userId == "" {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
 
-	cur, err := devicesCol.Find(ctx, bson.M{"OwnerId": userID})
+	devicesCol := s.DB.Collection(modelsv1.DEVICE_COLLECTION)
+
+	cur, err := devicesCol.Find(ctx, bson.M{"owner_id": userId})
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "%v", err)
 	}

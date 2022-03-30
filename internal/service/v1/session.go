@@ -9,6 +9,8 @@ import (
 	jwtauthv1 "github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth/v1"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (s *AuthService) SignIn(ctx context.Context, req *authv1.SignInRequest) (*authv1.SignInResponse, error) {
@@ -18,7 +20,7 @@ func (s *AuthService) SignIn(ctx context.Context, req *authv1.SignInRequest) (*a
 	err := users.FindOne(ctx, bson.M{"Email": req.Email}).Decode(&user)
 
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.NotFound, "No user found")
 	}
 
 	// create a new session
