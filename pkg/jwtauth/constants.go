@@ -1,4 +1,4 @@
-package jwtauthv1
+package jwtauth
 
 const (
 	JWT_METADATA_KEY     = "authorization"

@@ -4,9 +4,12 @@ import (
 	"context"
 	"log"
 
-	authv1 "github.com/cory-evans/gps-tracker-authentication/pkg/auth/v1"
+	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
+	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 )
 
 func main() {
@@ -18,13 +21,30 @@ func main() {
 
 	defer conn.Close()
 
-	client := authv1.NewAuthServiceClient(conn)
+	client := auth.NewAuthServiceClient(conn)
 
-	resp, err := client.GetUser(context.Background(), &authv1.GetUserRequest{})
+	ctx := context.Background()
+
+	signInResp, err := client.SignIn(ctx, &auth.SignInRequest{
+		Email:    "cory@email.localhost",
+		Password: "this is a strong password",
+	})
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	log.Println(resp)
+	log.Println(signInResp.Token)
+
+	ctx = metadata.AppendToOutgoingContext(context.Background(), jwtauth.JWT_METADATA_KEY, signInResp.Token)
+
+	deviceCreateResp, err := client.CreateDevice(ctx, &auth.CreateDeviceRequest{
+		DeviceName: "My Device",
+	})
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	log.Println(deviceCreateResp)
 }

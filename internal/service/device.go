@@ -1,11 +1,11 @@
-package servicev1
+package service
 
 import (
 	"context"
 
-	modelsv1 "github.com/cory-evans/gps-tracker-authentication/internal/models/v1"
-	authv1 "github.com/cory-evans/gps-tracker-authentication/pkg/auth/v1"
-	jwtauthv1 "github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth/v1"
+	"github.com/cory-evans/gps-tracker-authentication/internal/models"
+	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
+	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"google.golang.org/grpc/codes"
@@ -13,17 +13,17 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *AuthService) GetDevice(ctx context.Context, req *authv1.GetDeviceRequest) (*authv1.GetDeviceResponse, error) {
+func (s *AuthService) GetDevice(ctx context.Context, req *auth.GetDeviceRequest) (*auth.GetDeviceResponse, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, status.Errorf(codes.Internal, "missing metadata")
 	}
 
-	userId := jwtauthv1.GetUserIdFromMetadata(md)
+	userId := jwtauth.GetUserIdFromMetadata(md)
 
-	devicesCol := s.DB.Collection(modelsv1.DEVICE_COLLECTION)
+	devicesCol := s.DB.Collection(models.DEVICE_COLLECTION)
 
-	var device modelsv1.Device
+	var device models.Device
 	result := devicesCol.FindOne(ctx, bson.M{"device_id": req.DeviceId, "owner_id": userId})
 	err := result.Decode(&device)
 
@@ -31,18 +31,18 @@ func (s *AuthService) GetDevice(ctx context.Context, req *authv1.GetDeviceReques
 		return nil, status.Errorf(codes.NotFound, "device not found")
 	}
 
-	return &authv1.GetDeviceResponse{
+	return &auth.GetDeviceResponse{
 		Device: device.AsProtoBuf(),
 	}, nil
 }
 
-func (s *AuthService) CreateDevice(ctx context.Context, req *authv1.CreateDeviceRequest) (*authv1.CreateDeviceResponse, error) {
+func (s *AuthService) CreateDevice(ctx context.Context, req *auth.CreateDeviceRequest) (*auth.CreateDeviceResponse, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, status.Errorf(codes.Internal, "missing metadata")
 	}
 
-	userId := jwtauthv1.GetUserIdFromMetadata(md)
+	userId := jwtauth.GetUserIdFromMetadata(md)
 
 	if userId == "" {
 		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
@@ -58,8 +58,8 @@ func (s *AuthService) CreateDevice(ctx context.Context, req *authv1.CreateDevice
 		return nil, err
 	}
 
-	devicesCol := s.DB.Collection(modelsv1.DEVICE_COLLECTION)
-	dev := modelsv1.Device{
+	devicesCol := s.DB.Collection(models.DEVICE_COLLECTION)
+	dev := models.Device{
 		Id:      deviceID.String(),
 		OwnerId: userId,
 		Name:    req.GetDeviceName(),
@@ -70,25 +70,25 @@ func (s *AuthService) CreateDevice(ctx context.Context, req *authv1.CreateDevice
 		return nil, status.Errorf(codes.Internal, "failed to create device")
 	}
 
-	return &authv1.CreateDeviceResponse{
+	return &auth.CreateDeviceResponse{
 		Token:  "TODO",
 		Device: dev.AsProtoBuf(),
 	}, nil
 }
 
-func (s *AuthService) EditDevice(ctx context.Context, req *authv1.EditDeviceRequest) (*authv1.EditDeviceResponse, error) {
+func (s *AuthService) EditDevice(ctx context.Context, req *auth.EditDeviceRequest) (*auth.EditDeviceResponse, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, status.Errorf(codes.Internal, "missing metadata")
 	}
 
-	userId := jwtauthv1.GetUserIdFromMetadata(md)
+	userId := jwtauth.GetUserIdFromMetadata(md)
 
 	if userId == "" {
 		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
 	}
 
-	devicesCol := s.DB.Collection(modelsv1.DEVICE_COLLECTION)
+	devicesCol := s.DB.Collection(models.DEVICE_COLLECTION)
 
 	result := devicesCol.FindOneAndUpdate(ctx, bson.M{"DeviceId": req.GetDeviceId(), "OwnerId": userId}, bson.M{"$set": bson.M{"Name": req.GetDeviceName()}})
 
@@ -96,32 +96,32 @@ func (s *AuthService) EditDevice(ctx context.Context, req *authv1.EditDeviceRequ
 		return nil, status.Errorf(codes.NotFound, "device not found")
 	}
 
-	return &authv1.EditDeviceResponse{}, nil
+	return &auth.EditDeviceResponse{}, nil
 }
 
-func (s *AuthService) GetOwnedDevices(ctx context.Context, req *authv1.GetOwnedDevicesRequest) (*authv1.GetOwnedDevicesResponse, error) {
+func (s *AuthService) GetOwnedDevices(ctx context.Context, req *auth.GetOwnedDevicesRequest) (*auth.GetOwnedDevicesResponse, error) {
 	// check is authenticated
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, status.Errorf(codes.Unauthenticated, "Not Authenticated")
 	}
-	userId := jwtauthv1.GetUserIdFromMetadata(md)
+	userId := jwtauth.GetUserIdFromMetadata(md)
 
 	if userId == "" {
 		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
 	}
 
-	devicesCol := s.DB.Collection(modelsv1.DEVICE_COLLECTION)
+	devicesCol := s.DB.Collection(models.DEVICE_COLLECTION)
 
 	cur, err := devicesCol.Find(ctx, bson.M{"owner_id": userId})
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "%v", err)
 	}
 
-	var devices = make([]*authv1.Device, 0)
+	var devices = make([]*auth.Device, 0)
 
 	for cur.Next(ctx) {
-		var d modelsv1.Device
+		var d models.Device
 		err = cur.Decode(&d)
 		if err != nil {
 			// TODO: Log error here
@@ -131,7 +131,7 @@ func (s *AuthService) GetOwnedDevices(ctx context.Context, req *authv1.GetOwnedD
 		devices = append(devices, d.AsProtoBuf())
 	}
 
-	return &authv1.GetOwnedDevicesResponse{
+	return &auth.GetOwnedDevicesResponse{
 		Devices: devices,
 	}, nil
 }

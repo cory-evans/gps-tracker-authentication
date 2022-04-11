@@ -1,4 +1,4 @@
-package jwtauthv1
+package jwtauth
 
 import (
 	"log"

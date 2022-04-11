@@ -1,6 +1,6 @@
-package modelsv1
+package models
 
-import authv1 "github.com/cory-evans/gps-tracker-authentication/pkg/auth/v1"
+import "github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 
 const (
 	DEVICE_COLLECTION = "devices"
@@ -12,8 +12,8 @@ type Device struct {
 	Name    string `json:"name" bson:"name"`
 }
 
-func (d *Device) AsProtoBuf() *authv1.Device {
-	return &authv1.Device{
+func (d *Device) AsProtoBuf() *auth.Device {
+	return &auth.Device{
 		DeviceId: d.Id,
 		OwnerId:  d.OwnerId,
 		Name:     d.Name,

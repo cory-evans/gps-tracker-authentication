@@ -1,7 +1,7 @@
-package modelsv1
+package models
 
 import (
-	authv1 "github.com/cory-evans/gps-tracker-authentication/pkg/auth/v1"
+	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 )
 
 const (
@@ -15,8 +15,8 @@ type User struct {
 	PasswordHash string
 }
 
-func (u *User) AsProtoBuf() *authv1.User {
-	return &authv1.User{
+func (u *User) AsProtoBuf() *auth.User {
+	return &auth.User{
 		UserId:      u.UserId,
 		DisplayName: u.DisplayName,
 		Email:       u.Email,

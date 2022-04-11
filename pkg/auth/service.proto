@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package pkg.auth.v1;
+package pkg.auth;
 
-option go_package = "github.com/cory-evans/gps-tracker-authentication/pkg/auth/v1;authv1";
+option go_package = "github.com/cory-evans/gps-tracker-authentication/pkg/auth";
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";

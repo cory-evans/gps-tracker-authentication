@@ -1,7 +1,7 @@
-package modelsv1
+package models
 
 import (
-	authv1 "github.com/cory-evans/gps-tracker-authentication/pkg/auth/v1"
+	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 )
 
 type Session struct {
@@ -11,8 +11,8 @@ type Session struct {
 	ExpiresAt    int64  `json:"expires" bson:"Expires"`
 }
 
-func (s *Session) AsProtoBuf() *authv1.UserSession {
-	return &authv1.UserSession{
+func (s *Session) AsProtoBuf() *auth.UserSession {
+	return &auth.UserSession{
 		UserId:       s.UserId,
 		SessionId:    s.SessionId,
 		RefreshToken: s.RefreshToken,

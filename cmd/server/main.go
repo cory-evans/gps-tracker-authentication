@@ -8,9 +8,9 @@ import (
 	"os"
 	"os/signal"
 
-	databasev1 "github.com/cory-evans/gps-tracker-authentication/internal/database/v1"
-	servicev1 "github.com/cory-evans/gps-tracker-authentication/internal/service/v1"
-	authv1 "github.com/cory-evans/gps-tracker-authentication/pkg/auth/v1"
+	database "github.com/cory-evans/gps-tracker-authentication/internal/database"
+	service "github.com/cory-evans/gps-tracker-authentication/internal/service"
+	auth "github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -28,14 +28,19 @@ func myAuthFunc(ctx context.Context) (context.Context, error) {
 }
 
 func main() {
-	listen, err := net.Listen("tcp", ":8080")
+	// get the port from the environment variable
+	port := os.Getenv("GRPC_PORT")
+	if port == "" {
+		port = "8080"
+	}
+	listen, err := net.Listen("tcp", ":"+port)
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	mongoCtx := context.Background()
-	db, err := databasev1.NewDatabaseClient(os.Getenv("MONGO_URI"), mongoCtx)
+	db, err := database.NewDatabaseClient(os.Getenv("MONGO_URI"), mongoCtx)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -46,11 +51,11 @@ func main() {
 		grpc.UnaryInterceptor(grpc_auth.UnaryServerInterceptor(myAuthFunc)),
 		grpc.StreamInterceptor(grpc_auth.StreamServerInterceptor(myAuthFunc)),
 	)
-	authService := &servicev1.AuthService{
+	authService := &service.AuthService{
 		DB: userDB,
 	}
 
-	authv1.RegisterAuthServiceServer(grpcServer, authService)
+	auth.RegisterAuthServiceServer(grpcServer, authService)
 
 	go func() {
 		err := grpcServer.Serve(listen)
