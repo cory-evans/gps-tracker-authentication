@@ -33,15 +33,23 @@ func (s *AuthService) SignIn(ctx context.Context, req *auth.SignInRequest) (*aut
 		return nil, err
 	}
 
-	token, err := jwtauth.CreateNewSession(
-		user.UserId,
+	token, err := jwtauth.CreateJWTSession(
 		sessionId.String(),
+		user.UserId,
 		time.Hour*3,
 	)
 
 	if err != nil {
 		return nil, err
 	}
+
+	sess := models.Session{
+		ID:           sessionId.String(),
+		Subject:      user.UserId,
+		RefreshToken: refreshToken.String(),
+	}
+
+	s.DB.Collection(models.USER_SESSION_COLLECTION).InsertOne(ctx, sess)
 
 	return &auth.SignInResponse{
 		Token:        token,

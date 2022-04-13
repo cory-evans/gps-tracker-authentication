@@ -48,14 +48,14 @@ func MapJWT(ctx context.Context) (context.Context, error) {
 	return metadata.NewIncomingContext(ctx, md), nil
 }
 
-func CreateNewSession(userId, sessionId string, duration time.Duration) (string, error) {
+func CreateJWTSession(id, subject string, duration time.Duration) (string, error) {
 	now := time.Now()
 	claims := &jwt.StandardClaims{
-		Id:        sessionId,
+		Id:        id,
 		IssuedAt:  now.Unix(),
 		NotBefore: now.Unix(),
 		ExpiresAt: now.Add(duration).Unix(),
-		Subject:   userId,
+		Subject:   subject,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

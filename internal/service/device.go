@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"time"
 
 	"github.com/cory-evans/gps-tracker-authentication/internal/models"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
@@ -21,10 +22,14 @@ func (s *AuthService) GetDevice(ctx context.Context, req *auth.GetDeviceRequest)
 
 	userId := jwtauth.GetUserIdFromMetadata(md)
 
+	if userId == "" {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+
 	devicesCol := s.DB.Collection(models.DEVICE_COLLECTION)
 
 	var device models.Device
-	result := devicesCol.FindOne(ctx, bson.M{"device_id": req.DeviceId, "owner_id": userId})
+	result := devicesCol.FindOne(ctx, bson.M{"device_id": req.DeviceId})
 	err := result.Decode(&device)
 
 	if err != nil {
@@ -70,10 +75,28 @@ func (s *AuthService) CreateDevice(ctx context.Context, req *auth.CreateDeviceRe
 		return nil, status.Errorf(codes.Internal, "failed to create device")
 	}
 
+	// create session for the device
+	sessionID, err := uuid.NewUUID()
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken, err := uuid.NewUUID()
+
+	sessionsCol := s.DB.Collection(models.DEVICE_SESSION_COLLECTION)
+	sess := models.Session{
+		ID:           sessionID.String(),
+		Subject:      deviceID.String(),
+		RefreshToken: refreshToken.String(),
+	}
+
+	sessionsCol.InsertOne(ctx, sess)
+	ss, err := jwtauth.CreateJWTSession(sessionID.String(), deviceID.String(), time.Hour*24*30)
+
 	return &auth.CreateDeviceResponse{
-		Token:  "TODO",
+		Token:  ss,
 		Device: dev.AsProtoBuf(),
-	}, nil
+	}, err
 }
 
 func (s *AuthService) EditDevice(ctx context.Context, req *auth.EditDeviceRequest) (*auth.EditDeviceResponse, error) {
