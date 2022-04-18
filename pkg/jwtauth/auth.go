@@ -3,11 +3,11 @@ package jwtauth
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -18,19 +18,10 @@ func keyFunc(token *jwt.Token) (interface{}, error) {
 func MapJWT(ctx context.Context) (context.Context, error) {
 	// map incomming JWT to context metadata
 
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return ctx, fmt.Errorf("could not get metadata")
+	tokenString, err := grpc_auth.AuthFromMD(ctx, "bearer")
+	if err != nil {
+		return ctx, err
 	}
-
-	log.Println("MapJWT md: ", md)
-
-	tokenStrings := md.Get(JWT_METADATA_KEY)
-	if len(tokenStrings) != 1 {
-		return ctx, fmt.Errorf("could not get token")
-	}
-
-	tokenString := tokenStrings[0]
 
 	token, err := jwt.ParseWithClaims(tokenString, &jwt.StandardClaims{}, keyFunc)
 
