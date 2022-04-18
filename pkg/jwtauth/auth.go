@@ -34,6 +34,11 @@ func MapJWT(ctx context.Context) (context.Context, error) {
 		return ctx, fmt.Errorf("could not get claims")
 	}
 
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return ctx, fmt.Errorf("could not get metadata from context")
+	}
+
 	md.Set(JWT_METADATA_SUB_KEY, claims.Subject)
 
 	return metadata.NewIncomingContext(ctx, md), nil
