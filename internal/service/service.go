@@ -7,6 +7,8 @@ import (
 	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
 	"go.mongodb.org/mongo-driver/mongo"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type AuthService struct {
@@ -16,10 +18,17 @@ type AuthService struct {
 }
 
 func (s *AuthService) AuthFuncOverride(ctx context.Context, fullMethodName string) (context.Context, error) {
-	// map incomming JWT to context metadata
+	switch fullMethodName {
+	case "/pkg.auth.AuthService/CreateUser", "/pkg.auth.AuthService/SignIn":
+		// don't require auth
+		return ctx, nil
+	}
+
+	// all other requests require auth
 	ctx, err := jwtauth.MapJWT(ctx)
 	if err != nil {
 		log.Println("error mapping JWT to context metadata:", err)
+		return ctx, status.Errorf(codes.Unauthenticated, "Not authenticated.")
 	}
 
 	return ctx, nil
