@@ -42,16 +42,7 @@ func (s *AuthService) GetDevice(ctx context.Context, req *auth.GetDeviceRequest)
 }
 
 func (s *AuthService) CreateDevice(ctx context.Context, req *auth.CreateDeviceRequest) (*auth.CreateDeviceResponse, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Errorf(codes.Internal, "missing metadata")
-	}
-
-	userId := jwtauth.GetUserIdFromMetadata(md)
-
-	if userId == "" {
-		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
-	}
+	userId := jwtauth.GetUserIdFromContext(ctx)
 
 	deviceName := req.GetDeviceName()
 	if deviceName == "" {
@@ -100,16 +91,7 @@ func (s *AuthService) CreateDevice(ctx context.Context, req *auth.CreateDeviceRe
 }
 
 func (s *AuthService) EditDevice(ctx context.Context, req *auth.EditDeviceRequest) (*auth.EditDeviceResponse, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Errorf(codes.Internal, "missing metadata")
-	}
-
-	userId := jwtauth.GetUserIdFromMetadata(md)
-
-	if userId == "" {
-		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
-	}
+	userId := jwtauth.GetUserIdFromContext(ctx)
 
 	devicesCol := s.DB.Collection(models.DEVICE_COLLECTION)
 
@@ -123,16 +105,7 @@ func (s *AuthService) EditDevice(ctx context.Context, req *auth.EditDeviceReques
 }
 
 func (s *AuthService) GetOwnedDevices(ctx context.Context, req *auth.GetOwnedDevicesRequest) (*auth.GetOwnedDevicesResponse, error) {
-	// check is authenticated
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Errorf(codes.Unauthenticated, "Not Authenticated")
-	}
-	userId := jwtauth.GetUserIdFromMetadata(md)
-
-	if userId == "" {
-		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
-	}
+	userId := jwtauth.GetUserIdFromContext(ctx)
 
 	devicesCol := s.DB.Collection(models.DEVICE_COLLECTION)
 

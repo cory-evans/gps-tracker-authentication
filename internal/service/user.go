@@ -2,17 +2,17 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/cory-evans/gps-tracker-authentication/internal/models"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
-	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-func (s *AuthService) GetUserByMongoID(ctx context.Context, id interface{}) *models.User {
+func (s *AuthService) getUserByMongoID(ctx context.Context, id interface{}) *models.User {
 	users := s.DB.Collection(models.USER_COLLECTION)
 
 	var user models.User
@@ -23,15 +23,10 @@ func (s *AuthService) GetUserByMongoID(ctx context.Context, id interface{}) *mod
 func (s *AuthService) GetUser(ctx context.Context, req *auth.GetUserRequest) (*auth.GetUserResponse, error) {
 	users := s.DB.Collection(models.USER_COLLECTION)
 
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, fmt.Errorf("could not get metadata")
-	}
-
-	userId := jwtauth.GetUserIdFromMetadata(md)
+	userId := jwtauth.GetUserIdFromContext(ctx)
 
 	if userId != req.Id {
-		return nil, fmt.Errorf("Signed in user does not match requested user")
+		return nil, status.Errorf(codes.Unauthenticated, "Signed in user does not match requested user")
 	}
 
 	var user models.User
@@ -59,7 +54,7 @@ func (s *AuthService) CreateUser(ctx context.Context, req *auth.CreateUserReques
 		return nil, err
 	}
 
-	user := s.GetUserByMongoID(ctx, result.InsertedID)
+	user := s.getUserByMongoID(ctx, result.InsertedID)
 
 	return &auth.CreateUserResponse{
 		User: user.AsProtoBuf(),

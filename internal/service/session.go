@@ -58,5 +58,6 @@ func (s *AuthService) SignIn(ctx context.Context, req *auth.SignInRequest) (*aut
 }
 
 func (s *AuthService) SignOut(ctx context.Context, req *auth.SignOutRequest) (*auth.SignOutResponse, error) {
+	// TODO: remove session from database
 	return &auth.SignOutResponse{}, nil
 }
