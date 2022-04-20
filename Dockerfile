@@ -27,8 +27,8 @@ COPY pkg/ ./pkg/
 
 RUN buf generate
 
-COPY internal/ ./internal/
 COPY cmd/ ./cmd/
+COPY internal/ ./internal/
 
 # Create a staticly linked binary
 ENV CGO_ENABLED=0

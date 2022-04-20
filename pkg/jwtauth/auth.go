@@ -16,7 +16,16 @@ func keyFunc(token *jwt.Token) (interface{}, error) {
 }
 
 func MapJWT(ctx context.Context) (context.Context, error) {
-	// map incomming JWT to context metadata
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return ctx, fmt.Errorf("could not get metadata from context")
+	}
+
+	subject := md.Get(JWT_METADATA_SUB_KEY)
+	if len(subject) == 1 {
+		// the metadata is valid already
+		return ctx, nil
+	}
 
 	tokenString, err := grpc_auth.AuthFromMD(ctx, "bearer")
 	if err != nil {
@@ -32,11 +41,6 @@ func MapJWT(ctx context.Context) (context.Context, error) {
 	claims, ok := token.Claims.(*jwt.StandardClaims)
 	if !ok {
 		return ctx, fmt.Errorf("could not get claims")
-	}
-
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return ctx, fmt.Errorf("could not get metadata from context")
 	}
 
 	md.Set(JWT_METADATA_SUB_KEY, claims.Subject)
