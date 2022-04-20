@@ -31,5 +31,7 @@ func (s *AuthService) AuthFuncOverride(ctx context.Context, fullMethodName strin
 		return ctx, status.Errorf(codes.Unauthenticated, "Not authenticated.")
 	}
 
+	log.Println("INFO: Authenticated request to", fullMethodName)
+
 	return ctx, nil
 }
