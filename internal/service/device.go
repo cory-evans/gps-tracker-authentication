@@ -82,7 +82,8 @@ func (s *AuthService) CreateDevice(ctx context.Context, req *auth.CreateDeviceRe
 	}
 
 	sessionsCol.InsertOne(ctx, sess)
-	ss, err := jwtauth.CreateJWTSession(sessionID.String(), deviceID.String(), time.Hour*24*30)
+	tokenExpiresAt := time.Now().UTC().Add(time.Hour * 24 * 30).Unix()
+	ss, err := jwtauth.CreateJWTSession(sessionID.String(), deviceID.String(), tokenExpiresAt)
 
 	return &auth.CreateDeviceResponse{
 		Token:  ss,

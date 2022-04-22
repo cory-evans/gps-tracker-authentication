@@ -33,10 +33,11 @@ func (s *AuthService) SignIn(ctx context.Context, req *auth.SignInRequest) (*aut
 		return nil, err
 	}
 
+	tokenExpiresAt := time.Now().Add(time.Hour * 24 * 7).UTC().Unix()
 	token, err := jwtauth.CreateJWTSession(
 		sessionId.String(),
 		user.UserId,
-		time.Hour*3,
+		tokenExpiresAt,
 	)
 
 	if err != nil {
@@ -54,6 +55,8 @@ func (s *AuthService) SignIn(ctx context.Context, req *auth.SignInRequest) (*aut
 	return &auth.SignInResponse{
 		Token:        token,
 		RefreshToken: refreshToken.String(),
+		ExpiresAtUtc: tokenExpiresAt,
+		User:         user.AsProtoBuf(),
 	}, nil
 }
 

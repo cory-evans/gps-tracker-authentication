@@ -400,6 +400,13 @@
         },
         "refreshToken": {
           "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/authUser"
+        },
+        "expiresAtUtc": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
