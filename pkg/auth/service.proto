@@ -190,7 +190,6 @@ message UserSession {
 	string refresh_token = 2;
 	User user = 3;
 	int64 expires_at_utc = 4;
-	string name = 5;
 }
 
 message GetUserRequest {
