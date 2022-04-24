@@ -31,6 +31,14 @@ func (s *AuthService) AuthFuncOverride(ctx context.Context, fullMethodName strin
 		return ctx, status.Errorf(codes.Unauthenticated, "Not authenticated.")
 	}
 
+	sessionId := jwtauth.GetSessionIdFromContext(ctx)
+
+	// make sure session still exists
+	resp, err := s.SessionIsStillValid(ctx, &auth.SessionIsStillValidRequest{SessionId: sessionId})
+	if err != nil || !resp.IsValid {
+		return ctx, status.Errorf(codes.Unauthenticated, "Session expired or no longer exists.")
+	}
+
 	log.Println("INFO: Authenticated request to", fullMethodName)
 
 	return ctx, nil

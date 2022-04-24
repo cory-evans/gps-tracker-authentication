@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"time"
 
 	"github.com/cory-evans/gps-tracker-authentication/internal/models"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
@@ -67,27 +66,13 @@ func (s *AuthService) CreateDevice(ctx context.Context, req *auth.CreateDeviceRe
 	}
 
 	// create session for the device
-	sessionID, err := uuid.NewUUID()
-	if err != nil {
-		return nil, err
-	}
-
-	refreshToken, err := uuid.NewUUID()
-
-	sessionsCol := s.DB.Collection(models.DEVICE_SESSION_COLLECTION)
-	sess := models.Session{
-		ID:           sessionID.String(),
-		Subject:      deviceID.String(),
-		RefreshToken: refreshToken.String(),
-	}
-
-	sessionsCol.InsertOne(ctx, sess)
-	tokenExpiresAt := time.Now().UTC().Add(time.Hour * 24 * 30).Unix()
-	ss, err := jwtauth.CreateJWTSession(sessionID.String(), deviceID.String(), tokenExpiresAt)
+	token, sess, err := s.createNewDeviceSession(ctx, deviceID.String())
 
 	return &auth.CreateDeviceResponse{
-		Token:  ss,
-		Device: dev.AsProtoBuf(),
+		Token:        token,
+		Device:       dev.AsProtoBuf(),
+		RefreshToken: sess.RefreshToken,
+		ExpiresAtUtc: sess.ExpiresAtUtc,
 	}, err
 }
 

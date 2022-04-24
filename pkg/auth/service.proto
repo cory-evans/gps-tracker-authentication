@@ -23,7 +23,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 				name: "Authorization";
 			};
 		}
-	}
+	};
+	base_path: "/auth";
 };
 
 service AuthService {
@@ -37,7 +38,9 @@ service AuthService {
 					key: "ApiKeyAuth",
 					value: {}
 				}
-			}
+			},
+			summary: "Get User by ID",
+			tags: ["User"]
 		};
 	}
 	rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
@@ -45,17 +48,25 @@ service AuthService {
 			post: "/user/create",
 			body: "*";
 		};
+		option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+			summary: "Sign up by creating a new user",
+			tags: ["User"]
+		};
 	}
 	rpc SignIn(SignInRequest) returns (SignInResponse) {
 		option (google.api.http) = {
-			post: "/signin",
+			post: "/session/create",
 			body: "*";
+		};
+		option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+			summary: "Sign in and create a session",
+			tags: ["Session"]
 		};
 	}
 
 	rpc SignOut(SignOutRequest) returns (SignOutResponse) {
 		option (google.api.http) = {
-			post: "/signout"
+			post: "/session/remove"
 		};
 		option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
 			security: {
@@ -63,7 +74,43 @@ service AuthService {
 					key: "ApiKeyAuth",
 					value: {}
 				}
-			}
+			},
+			summary: "Sign Out",
+			tags: ["Session"]
+		};
+	}
+
+	rpc SessionIsStillValid(SessionIsStillValidRequest) returns (SessionIsStillValidResponse) {}
+
+	rpc InvalidateAllSessions(InvalidateAllSessionsRequest) returns (InvalidateAllSessionsResponse) {
+		option (google.api.http) = {
+			post: "/session/invalidate"
+		};
+		option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+			security: {
+				security_requirement: {
+					key: "ApiKeyAuth",
+					value: {}
+				}
+			},
+			summary: "Invalidate all user sessions",
+			tags: ["Session"]
+		};
+	}
+
+	rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse) {
+		option (google.api.http) = {
+			post: "/session/refresh"
+		};
+		option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+			security: {
+				security_requirement: {
+					key: "ApiKeyAuth",
+					value: {}
+				}
+			},
+			summary: "Refresh a session",
+			tags: ["Session"]
 		};
 	}
 
@@ -78,7 +125,9 @@ service AuthService {
 					key: "ApiKeyAuth",
 					value: {}
 				}
-			}
+			},
+			summary: "Create a new device",
+			tags: ["Devices"]
 		};
 	}
 	rpc GetDevice(GetDeviceRequest) returns (GetDeviceResponse) {
@@ -91,12 +140,14 @@ service AuthService {
 					key: "ApiKeyAuth",
 					value: {}
 				}
-			}
+			},
+			summary: "Get a device by ID",
+			tags: ["Devices"]
 		};
 	}
 	rpc EditDevice(EditDeviceRequest) returns (EditDeviceResponse) {
 		option (google.api.http) = {
-			post: "/device/{device_id}/edit",
+			put: "/device/{device_id}/edit",
 			body: "*";
 		};
 		option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -105,7 +156,9 @@ service AuthService {
 					key: "ApiKeyAuth",
 					value: {}
 				}
-			}
+			},
+			summary: "Update device details",
+			tags: ["Devices"]
 		};
 	}
 	rpc GetOwnedDevices(GetOwnedDevicesRequest) returns (GetOwnedDevicesResponse) {
@@ -118,7 +171,9 @@ service AuthService {
 					key: "ApiKeyAuth",
 					value: {}
 				}
-			}
+			},
+			summary: "Get a list of all devices owned by the user",
+			tags: ["Devices"]
 		};
 	}
 }
@@ -131,10 +186,11 @@ message User {
 }
 
 message UserSession {
-	string session_id = 1;
+	string token = 1;
 	string refresh_token = 2;
-	string user_id = 3;
-	int64 expires_at = 4;
+	User user = 3;
+	int64 expires_at_utc = 4;
+	string name = 5;
 }
 
 message GetUserRequest {
@@ -161,10 +217,7 @@ message SignInRequest {
 	string password = 2;
 }
 message SignInResponse {
-	string token = 1;
-	string refresh_token = 2;
-	User user = 3;
-	int64 expires_at_utc = 4;
+	UserSession session = 1;
 }
 
 message SignOutRequest {
@@ -172,6 +225,23 @@ message SignOutRequest {
 
 message SignOutResponse {
 	string status = 1;
+}
+
+message SessionIsStillValidRequest {
+	string session_id = 1;
+}
+message SessionIsStillValidResponse {
+	bool is_valid = 1;
+}
+
+message InvalidateAllSessionsRequest {}
+message InvalidateAllSessionsResponse {}
+
+message RefreshSessionRequest {
+	string refresh_token = 1;
+}
+message RefreshSessionResponse {
+	UserSession session = 1;
 }
 
 message Device {
@@ -186,7 +256,9 @@ message CreateDeviceRequest {
 
 message CreateDeviceResponse {
 	string token = 1;
-	Device device = 2;
+	string refresh_token = 2;
+	Device device = 3;
+	int64 expires_at_utc = 4;
 }
 
 message GetDeviceRequest {

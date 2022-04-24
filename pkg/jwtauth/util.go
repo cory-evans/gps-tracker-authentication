@@ -6,12 +6,16 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func GetUserIdFromMetadata(md metadata.MD) string {
-	values := md.Get(JWT_METADATA_SUB_KEY)
+func GetValueFromMetadata(md metadata.MD, key string) string {
+	values := md.Get(key)
 	if len(values) == 1 {
 		return values[0]
 	}
 	return ""
+}
+
+func GetUserIdFromMetadata(md metadata.MD) string {
+	return GetValueFromMetadata(md, JWT_METADATA_SUB_KEY)
 }
 
 func GetUserIdFromContext(ctx context.Context) string {
@@ -19,5 +23,17 @@ func GetUserIdFromContext(ctx context.Context) string {
 	if !ok {
 		return ""
 	}
-	return GetUserIdFromMetadata(md)
+	return GetValueFromMetadata(md, JWT_METADATA_SUB_KEY)
+}
+
+func GetSessionIdFromMetadata(md metadata.MD) string {
+	return GetValueFromMetadata(md, JWT_METADATA_ID_KEY)
+}
+
+func GetSessionIdFromContext(ctx context.Context) string {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return ""
+	}
+	return GetSessionIdFromMetadata(md)
 }

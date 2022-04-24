@@ -9,6 +9,7 @@
       "name": "AuthService"
     }
   ],
+  "basePath": "/auth",
   "consumes": [
     "application/json"
   ],
@@ -18,6 +19,7 @@
   "paths": {
     "/device/create": {
       "post": {
+        "summary": "Create a new device",
         "operationId": "AuthService_CreateDevice",
         "responses": {
           "200": {
@@ -44,7 +46,7 @@
           }
         ],
         "tags": [
-          "AuthService"
+          "Devices"
         ],
         "security": [
           {
@@ -55,6 +57,7 @@
     },
     "/device/{deviceId}": {
       "get": {
+        "summary": "Get a device by ID",
         "operationId": "AuthService_GetDevice",
         "responses": {
           "200": {
@@ -79,7 +82,7 @@
           }
         ],
         "tags": [
-          "AuthService"
+          "Devices"
         ],
         "security": [
           {
@@ -89,7 +92,8 @@
       }
     },
     "/device/{deviceId}/edit": {
-      "post": {
+      "put": {
+        "summary": "Update device details",
         "operationId": "AuthService_EditDevice",
         "responses": {
           "200": {
@@ -127,7 +131,7 @@
           }
         ],
         "tags": [
-          "AuthService"
+          "Devices"
         ],
         "security": [
           {
@@ -138,6 +142,7 @@
     },
     "/devices": {
       "get": {
+        "summary": "Get a list of all devices owned by the user",
         "operationId": "AuthService_GetOwnedDevices",
         "responses": {
           "200": {
@@ -154,7 +159,7 @@
           }
         },
         "tags": [
-          "AuthService"
+          "Devices"
         ],
         "security": [
           {
@@ -163,8 +168,9 @@
         ]
       }
     },
-    "/signin": {
+    "/session/create": {
       "post": {
+        "summary": "Sign in and create a session",
         "operationId": "AuthService_SignIn",
         "responses": {
           "200": {
@@ -191,12 +197,77 @@
           }
         ],
         "tags": [
-          "AuthService"
+          "Session"
         ]
       }
     },
-    "/signout": {
+    "/session/invalidate": {
       "post": {
+        "summary": "Invalidate all user sessions",
+        "operationId": "AuthService_InvalidateAllSessions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authInvalidateAllSessionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Session"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/session/refresh": {
+      "post": {
+        "summary": "Refresh a session",
+        "operationId": "AuthService_RefreshSession",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authRefreshSessionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "refreshToken",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Session"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/session/remove": {
+      "post": {
+        "summary": "Sign Out",
         "operationId": "AuthService_SignOut",
         "responses": {
           "200": {
@@ -213,7 +284,7 @@
           }
         },
         "tags": [
-          "AuthService"
+          "Session"
         ],
         "security": [
           {
@@ -224,6 +295,7 @@
     },
     "/user/create": {
       "post": {
+        "summary": "Sign up by creating a new user",
         "operationId": "AuthService_CreateUser",
         "responses": {
           "200": {
@@ -250,12 +322,13 @@
           }
         ],
         "tags": [
-          "AuthService"
+          "User"
         ]
       }
     },
     "/user/{id}": {
       "get": {
+        "summary": "Get User by ID",
         "operationId": "AuthService_GetUser",
         "responses": {
           "200": {
@@ -280,7 +353,7 @@
           }
         ],
         "tags": [
-          "AuthService"
+          "User"
         ],
         "security": [
           {
@@ -305,8 +378,15 @@
         "token": {
           "type": "string"
         },
+        "refreshToken": {
+          "type": "string"
+        },
         "device": {
           "$ref": "#/definitions/authDevice"
+        },
+        "expiresAtUtc": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
@@ -381,6 +461,25 @@
         }
       }
     },
+    "authInvalidateAllSessionsResponse": {
+      "type": "object"
+    },
+    "authRefreshSessionResponse": {
+      "type": "object",
+      "properties": {
+        "session": {
+          "$ref": "#/definitions/authUserSession"
+        }
+      }
+    },
+    "authSessionIsStillValidResponse": {
+      "type": "object",
+      "properties": {
+        "isValid": {
+          "type": "boolean"
+        }
+      }
+    },
     "authSignInRequest": {
       "type": "object",
       "properties": {
@@ -395,18 +494,8 @@
     "authSignInResponse": {
       "type": "object",
       "properties": {
-        "token": {
-          "type": "string"
-        },
-        "refreshToken": {
-          "type": "string"
-        },
-        "user": {
-          "$ref": "#/definitions/authUser"
-        },
-        "expiresAtUtc": {
-          "type": "string",
-          "format": "int64"
+        "session": {
+          "$ref": "#/definitions/authUserSession"
         }
       }
     },
@@ -428,6 +517,27 @@
           "type": "string"
         },
         "email": {
+          "type": "string"
+        }
+      }
+    },
+    "authUserSession": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/authUser"
+        },
+        "expiresAtUtc": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
           "type": "string"
         }
       }

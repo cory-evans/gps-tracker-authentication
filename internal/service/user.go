@@ -20,6 +20,14 @@ func (s *AuthService) getUserByMongoID(ctx context.Context, id interface{}) *mod
 	return &user
 }
 
+func (s AuthService) getUserByUserID(ctx context.Context, userId string) *models.User {
+	users := s.DB.Collection(models.USER_COLLECTION)
+
+	var user models.User
+	users.FindOne(ctx, bson.M{"UserId": userId}).Decode(&user)
+	return &user
+}
+
 func (s *AuthService) GetUser(ctx context.Context, req *auth.GetUserRequest) (*auth.GetUserResponse, error) {
 	users := s.DB.Collection(models.USER_COLLECTION)
 

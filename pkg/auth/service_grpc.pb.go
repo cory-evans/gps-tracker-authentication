@@ -22,6 +22,9 @@ type AuthServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	SignIn(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInResponse, error)
 	SignOut(ctx context.Context, in *SignOutRequest, opts ...grpc.CallOption) (*SignOutResponse, error)
+	SessionIsStillValid(ctx context.Context, in *SessionIsStillValidRequest, opts ...grpc.CallOption) (*SessionIsStillValidResponse, error)
+	InvalidateAllSessions(ctx context.Context, in *InvalidateAllSessionsRequest, opts ...grpc.CallOption) (*InvalidateAllSessionsResponse, error)
+	RefreshSession(ctx context.Context, in *RefreshSessionRequest, opts ...grpc.CallOption) (*RefreshSessionResponse, error)
 	CreateDevice(ctx context.Context, in *CreateDeviceRequest, opts ...grpc.CallOption) (*CreateDeviceResponse, error)
 	GetDevice(ctx context.Context, in *GetDeviceRequest, opts ...grpc.CallOption) (*GetDeviceResponse, error)
 	EditDevice(ctx context.Context, in *EditDeviceRequest, opts ...grpc.CallOption) (*EditDeviceResponse, error)
@@ -72,6 +75,33 @@ func (c *authServiceClient) SignOut(ctx context.Context, in *SignOutRequest, opt
 	return out, nil
 }
 
+func (c *authServiceClient) SessionIsStillValid(ctx context.Context, in *SessionIsStillValidRequest, opts ...grpc.CallOption) (*SessionIsStillValidResponse, error) {
+	out := new(SessionIsStillValidResponse)
+	err := c.cc.Invoke(ctx, "/pkg.auth.AuthService/SessionIsStillValid", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) InvalidateAllSessions(ctx context.Context, in *InvalidateAllSessionsRequest, opts ...grpc.CallOption) (*InvalidateAllSessionsResponse, error) {
+	out := new(InvalidateAllSessionsResponse)
+	err := c.cc.Invoke(ctx, "/pkg.auth.AuthService/InvalidateAllSessions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RefreshSession(ctx context.Context, in *RefreshSessionRequest, opts ...grpc.CallOption) (*RefreshSessionResponse, error) {
+	out := new(RefreshSessionResponse)
+	err := c.cc.Invoke(ctx, "/pkg.auth.AuthService/RefreshSession", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) CreateDevice(ctx context.Context, in *CreateDeviceRequest, opts ...grpc.CallOption) (*CreateDeviceResponse, error) {
 	out := new(CreateDeviceResponse)
 	err := c.cc.Invoke(ctx, "/pkg.auth.AuthService/CreateDevice", in, out, opts...)
@@ -116,6 +146,9 @@ type AuthServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	SignIn(context.Context, *SignInRequest) (*SignInResponse, error)
 	SignOut(context.Context, *SignOutRequest) (*SignOutResponse, error)
+	SessionIsStillValid(context.Context, *SessionIsStillValidRequest) (*SessionIsStillValidResponse, error)
+	InvalidateAllSessions(context.Context, *InvalidateAllSessionsRequest) (*InvalidateAllSessionsResponse, error)
+	RefreshSession(context.Context, *RefreshSessionRequest) (*RefreshSessionResponse, error)
 	CreateDevice(context.Context, *CreateDeviceRequest) (*CreateDeviceResponse, error)
 	GetDevice(context.Context, *GetDeviceRequest) (*GetDeviceResponse, error)
 	EditDevice(context.Context, *EditDeviceRequest) (*EditDeviceResponse, error)
@@ -138,6 +171,15 @@ func (UnimplementedAuthServiceServer) SignIn(context.Context, *SignInRequest) (*
 }
 func (UnimplementedAuthServiceServer) SignOut(context.Context, *SignOutRequest) (*SignOutResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignOut not implemented")
+}
+func (UnimplementedAuthServiceServer) SessionIsStillValid(context.Context, *SessionIsStillValidRequest) (*SessionIsStillValidResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SessionIsStillValid not implemented")
+}
+func (UnimplementedAuthServiceServer) InvalidateAllSessions(context.Context, *InvalidateAllSessionsRequest) (*InvalidateAllSessionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InvalidateAllSessions not implemented")
+}
+func (UnimplementedAuthServiceServer) RefreshSession(context.Context, *RefreshSessionRequest) (*RefreshSessionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshSession not implemented")
 }
 func (UnimplementedAuthServiceServer) CreateDevice(context.Context, *CreateDeviceRequest) (*CreateDeviceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDevice not implemented")
@@ -236,6 +278,60 @@ func _AuthService_SignOut_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_SessionIsStillValid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SessionIsStillValidRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).SessionIsStillValid(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pkg.auth.AuthService/SessionIsStillValid",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).SessionIsStillValid(ctx, req.(*SessionIsStillValidRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_InvalidateAllSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InvalidateAllSessionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).InvalidateAllSessions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pkg.auth.AuthService/InvalidateAllSessions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).InvalidateAllSessions(ctx, req.(*InvalidateAllSessionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RefreshSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RefreshSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pkg.auth.AuthService/RefreshSession",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RefreshSession(ctx, req.(*RefreshSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_CreateDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateDeviceRequest)
 	if err := dec(in); err != nil {
@@ -330,6 +426,18 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SignOut",
 			Handler:    _AuthService_SignOut_Handler,
+		},
+		{
+			MethodName: "SessionIsStillValid",
+			Handler:    _AuthService_SessionIsStillValid_Handler,
+		},
+		{
+			MethodName: "InvalidateAllSessions",
+			Handler:    _AuthService_InvalidateAllSessions_Handler,
+		},
+		{
+			MethodName: "RefreshSession",
+			Handler:    _AuthService_RefreshSession_Handler,
 		},
 		{
 			MethodName: "CreateDevice",

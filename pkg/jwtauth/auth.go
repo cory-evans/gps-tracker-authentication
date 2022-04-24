@@ -44,6 +44,7 @@ func MapJWT(ctx context.Context) (context.Context, error) {
 	}
 
 	md.Set(JWT_METADATA_SUB_KEY, claims.Subject)
+	md.Set(JWT_METADATA_ID_KEY, claims.Id)
 
 	return metadata.NewIncomingContext(ctx, md), nil
 }
