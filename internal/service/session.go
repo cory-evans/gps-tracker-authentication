@@ -94,7 +94,7 @@ func (s *AuthService) getUserSessionByID(ctx context.Context, sessionId string) 
 
 func (s *AuthService) SessionIsStillValid(ctx context.Context, req *auth.SessionIsStillValidRequest) (*auth.SessionIsStillValidResponse, error) {
 	session := models.Session{}
-	err := s.DB.Collection(models.SESSION_COLLECTION).FindOne(ctx, bson.M{"ID": req.GetSessionId()}).Decode(&session)
+	err := s.DB.Collection(models.SESSION_COLLECTION).FindOne(ctx, bson.M{"SessionId": req.GetSessionId()}).Decode(&session)
 
 	if err != nil {
 		return &auth.SessionIsStillValidResponse{

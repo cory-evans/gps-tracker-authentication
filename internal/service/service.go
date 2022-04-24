@@ -35,7 +35,11 @@ func (s *AuthService) AuthFuncOverride(ctx context.Context, fullMethodName strin
 
 	// make sure session still exists
 	resp, err := s.SessionIsStillValid(ctx, &auth.SessionIsStillValidRequest{SessionId: sessionId})
-	if err != nil || !resp.IsValid {
+	if err != nil {
+		return ctx, status.Errorf(codes.Internal, "Internal Server Error: %s", err.Error())
+	}
+
+	if !resp.IsValid {
 		return ctx, status.Errorf(codes.Unauthenticated, "Session expired or no longer exists.")
 	}
 
