@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/cory-evans/gps-tracker-authentication/internal/models"
-	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
 	"github.com/google/uuid"
+	auth "go.buf.build/grpc/go/corux/gps-auth/v1"
 	"go.mongodb.org/mongo-driver/bson"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

@@ -1,6 +1,8 @@
 package models
 
-import "github.com/cory-evans/gps-tracker-authentication/pkg/auth"
+import (
+	auth "go.buf.build/grpc/go/corux/gps-auth/v1"
+)
 
 const (
 	DEVICE_COLLECTION = "devices"
