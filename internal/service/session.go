@@ -7,7 +7,7 @@ import (
 	"github.com/cory-evans/gps-tracker-authentication/internal/models"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
 	"github.com/google/uuid"
-	auth "go.buf.build/grpc/go/corux/gps-auth/v1"
+	auth "go.buf.build/grpc/go/corux/gps-tracker-auth/auth/v1"
 	"go.mongodb.org/mongo-driver/bson"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -92,19 +92,19 @@ func (s *AuthService) getUserSessionByID(ctx context.Context, sessionId string) 
 	return &session, nil
 }
 
-func (s *AuthService) SessionIsStillValid(ctx context.Context, req *auth.SessionIsStillValidRequest) (*auth.SessionIsStillValidResponse, error) {
+func (s *AuthService) SessionIsValid(ctx context.Context, req *auth.SessionIsValidRequest) (*auth.SessionIsValidResponse, error) {
 	session := models.Session{}
 	err := s.DB.Collection(models.SESSION_COLLECTION).FindOne(ctx, bson.M{"SessionId": req.GetSessionId()}).Decode(&session)
 
 	if err != nil {
-		return &auth.SessionIsStillValidResponse{
+		return &auth.SessionIsValidResponse{
 			IsValid: false,
 		}, nil
 	}
 
 	isValid := session.ExpiresAtUtc > time.Now().UTC().Unix()
 
-	return &auth.SessionIsStillValidResponse{
+	return &auth.SessionIsValidResponse{
 		IsValid: isValid,
 	}, nil
 }

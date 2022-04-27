@@ -11,7 +11,7 @@ import (
 	database "github.com/cory-evans/gps-tracker-authentication/internal/database"
 	service "github.com/cory-evans/gps-tracker-authentication/internal/service"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
-	auth "go.buf.build/grpc/go/corux/gps-auth/v1"
+	auth "go.buf.build/grpc/go/corux/gps-tracker-auth/auth/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )

@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
-	auth "go.buf.build/grpc/go/corux/gps-auth/v1"
+	auth "go.buf.build/grpc/go/corux/gps-tracker-auth/auth/v1"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -34,7 +34,7 @@ func (s *AuthService) AuthFuncOverride(ctx context.Context, fullMethodName strin
 	sessionId := jwtauth.GetSessionIdFromContext(ctx)
 
 	// make sure session still exists
-	resp, err := s.SessionIsStillValid(ctx, &auth.SessionIsStillValidRequest{SessionId: sessionId})
+	resp, err := s.SessionIsValid(ctx, &auth.SessionIsValidRequest{SessionId: sessionId})
 	if err != nil {
 		return ctx, status.Errorf(codes.Internal, "Internal Server Error: %s", err.Error())
 	}

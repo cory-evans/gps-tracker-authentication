@@ -1,7 +1,7 @@
 package models
 
 import (
-	auth "go.buf.build/grpc/go/corux/gps-auth/v1"
+	auth "go.buf.build/grpc/go/corux/gps-tracker-auth/auth/v1"
 )
 
 const (

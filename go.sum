@@ -184,11 +184,8 @@ github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9de
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
-go.buf.build/grpc/go/corux/gps-auth v1.1.1 h1:9s3lgik1lCWoVUGwryyfycpz6W+S2SJ1H/jbwqt3ggU=
-go.buf.build/grpc/go/corux/gps-auth v1.1.1/go.mod h1:0RYD9LUF7FLF6utXVCQzYGmUCy4CgZsI7N/OYwYA0+o=
-go.buf.build/grpc/go/corux/gps-auth v1.3.1 h1:rzcnK2jsGuEkEfVveTNuNdgSCdE3NRODu7DohqcG8A0=
-go.buf.build/grpc/go/corux/gps-auth v1.3.1/go.mod h1:EwaE/dG1ssOff6rwKEqjXxgKSKDp3RGgCz3LNFuNNiI=
-go.buf.build/grpc/go/grpc-ecosystem/grpc-gateway v1.1.43/go.mod h1:Gu8vxCLXUb+o3FRojMHlZD9M0Lm0Ylc/ztPp5BI82Cc=
+go.buf.build/grpc/go/corux/gps-tracker-auth v1.3.2 h1:NKfSsJLS5Nx+2i1ytiVPetG5b3CUHnEZiubyDOZZkMw=
+go.buf.build/grpc/go/corux/gps-tracker-auth v1.3.2/go.mod h1:lU2E7B1mL8/BlZXyIfXtMHUhICteadvQaYthIHNQwlM=
 go.buf.build/grpc/go/grpc-ecosystem/grpc-gateway v1.3.43 h1:SgxaTd0S51LK45Wud8zUhjrENBjs3bVNphXXipUbflU=
 go.buf.build/grpc/go/grpc-ecosystem/grpc-gateway v1.3.43/go.mod h1:o/YXQ+4ci1vCCgoEDAID3eu4eFZ6u8zJR3BJSULaRDc=
 go.mongodb.org/mongo-driver v1.9.0 h1:f3aLGJvQmBl8d9S40IL+jEyBC6hfLPbJjv9t5hEM9ck=
@@ -271,8 +268,6 @@ golang.org/x/net v0.0.0-20201021035429-f5854403a974/go.mod h1:sp8m0HH+o8qH0wwXwY
 golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4/go.mod h1:p54w0d4576C0XHj96bSt6lcn1PtDYWL6XObtHCRCNQM=
 golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
 golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd/go.mod h1:CfG3xpIq0wQ8r1q4Su4UZFWDARRcnwPjda9FqA0JpMk=
-golang.org/x/net v0.0.0-20220421235706-1d1ef9303861 h1:yssD99+7tqHWO5Gwh81phT+67hg+KttniBr6UnEXOY8=
-golang.org/x/net v0.0.0-20220421235706-1d1ef9303861/go.mod h1:CfG3xpIq0wQ8r1q4Su4UZFWDARRcnwPjda9FqA0JpMk=
 golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 h1:HVyaeDAYux4pnY+D/SiwmLOR36ewZ4iGQIIrtnuCjFA=
 golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4/go.mod h1:CfG3xpIq0wQ8r1q4Su4UZFWDARRcnwPjda9FqA0JpMk=
 golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
@@ -447,8 +442,6 @@ google.golang.org/genproto v0.0.0-20200618031413-b414f8b61790/go.mod h1:jDfRM7Fc
 google.golang.org/genproto v0.0.0-20200729003335-053ba62fc06f/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/genproto v0.0.0-20200804131852-c06518451d9c/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/genproto v0.0.0-20200825200019-8632dd797987/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
-google.golang.org/genproto v0.0.0-20220422154200-b37d22cd5731 h1:nquqdM9+ps0JZcIiI70+tqoaIFS5Ql4ZuK8UXnz3HfE=
-google.golang.org/genproto v0.0.0-20220422154200-b37d22cd5731/go.mod h1:8w6bsBMX6yCPbAVTeqQHvzxW0EIFigd5lZyahWgyfDo=
 google.golang.org/genproto v0.0.0-20220426171045-31bebdecfb46 h1:G1IeWbjrqEq9ChWxEuRPJu6laA67+XgTFHVSAvepr38=
 google.golang.org/genproto v0.0.0-20220426171045-31bebdecfb46/go.mod h1:8w6bsBMX6yCPbAVTeqQHvzxW0EIFigd5lZyahWgyfDo=
 google.golang.org/grpc v1.19.0/go.mod h1:mqu4LbDTu4XGKhr4mRzUsmM4RtVoemTSY81AxZiDr8c=
