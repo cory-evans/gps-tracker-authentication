@@ -19,7 +19,7 @@ type AuthService struct {
 
 func (s *AuthService) AuthFuncOverride(ctx context.Context, fullMethodName string) (context.Context, error) {
 	switch fullMethodName {
-	case "/pkg.auth.AuthService/CreateUser", "/pkg.auth.AuthService/SignIn":
+	case "/auth.v1.AuthService/CreateUser", "/auth.v1.AuthService/SignIn":
 		// don't require auth
 		return ctx, nil
 	}

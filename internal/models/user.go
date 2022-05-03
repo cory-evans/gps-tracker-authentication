@@ -12,6 +12,8 @@ type User struct {
 	UserId       string `json:"user_id" bson:"UserId"`
 	DisplayName  string `json:"display_name" bson:"DisplayName"`
 	Email        string `json:"email" bson:"Email"`
+	FirstName    string `json:"first_name" bson:"FirstName"`
+	LastName     string `json:"last_name" bson:"LastName"`
 	PasswordHash string
 }
 
@@ -20,5 +22,7 @@ func (u *User) AsProtoBuf() *auth.User {
 		UserId:      u.UserId,
 		DisplayName: u.DisplayName,
 		Email:       u.Email,
+		FirstName:   u.FirstName,
+		LastName:    u.LastName,
 	}
 }

@@ -28,6 +28,16 @@ func (s AuthService) getUserByUserID(ctx context.Context, userId string) *models
 	return &user
 }
 
+func (s *AuthService) GetMe(ctx context.Context, req *auth.GetMeRequest) (*auth.GetMeResponse, error) {
+	userId := jwtauth.GetUserIdFromContext(ctx)
+
+	user := s.getUserByUserID(ctx, userId)
+
+	return &auth.GetMeResponse{
+		User: user.AsProtoBuf(),
+	}, nil
+}
+
 func (s *AuthService) GetUser(ctx context.Context, req *auth.GetUserRequest) (*auth.GetUserResponse, error) {
 	users := s.DB.Collection(models.USER_COLLECTION)
 
