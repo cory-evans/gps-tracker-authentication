@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	auth "go.buf.build/grpc/go/corux/gps-tracker-auth/auth/v1"
 	"go.mongodb.org/mongo-driver/bson"
+	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -119,7 +120,7 @@ func (s *AuthService) SignIn(ctx context.Context, req *auth.SignInRequest) (*aut
 		return nil, status.Error(codes.NotFound, "No user found")
 	}
 
-	if user.PasswordHash != req.Password {
+	if bcrypt.CompareHashAndPassword(user.PasswordHash, []byte(req.Password)) != nil {
 		return nil, status.Error(codes.Unauthenticated, "Incorrect password")
 	}
 

@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	auth "go.buf.build/grpc/go/corux/gps-tracker-auth/auth/v1"
 	"go.mongodb.org/mongo-driver/bson"
+	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -62,11 +63,34 @@ func (s *AuthService) CreateUser(ctx context.Context, req *auth.CreateUserReques
 		return nil, err
 	}
 
+	// check that the user doesn't already exist
+	var userModel models.User
+	err = users.FindOne(ctx, bson.M{"Email": req.Email}).Decode(&userModel)
+	if err == nil {
+		return nil, status.Errorf(codes.AlreadyExists, "User already exists")
+	}
+
+	if (req.DisplayName == "") || (req.Email == "") || (req.Password == "") {
+		return nil, status.Errorf(codes.InvalidArgument, "Missing required fields")
+	}
+
+	if (req.FirstName == "") || (req.LastName == "") {
+		return nil, status.Errorf(codes.InvalidArgument, "Missing required fields")
+	}
+
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Error hashing password")
+	}
+
 	result, err := users.InsertOne(ctx, bson.M{
 		"UserId":       userId.String(),
 		"DisplayName":  req.DisplayName,
 		"Email":        req.Email,
-		"PasswordHash": req.Password,
+		"PasswordHash": passwordHash,
+		"FirstName":    req.FirstName,
+		"LastName":     req.LastName,
 	})
 	if err != nil {
 		return nil, err

@@ -14,7 +14,7 @@ type User struct {
 	Email        string `json:"email" bson:"Email"`
 	FirstName    string `json:"first_name" bson:"FirstName"`
 	LastName     string `json:"last_name" bson:"LastName"`
-	PasswordHash string
+	PasswordHash []byte
 }
 
 func (u *User) AsProtoBuf() *auth.User {
