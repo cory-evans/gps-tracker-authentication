@@ -24,7 +24,7 @@ func (s *AuthService) createNewUserSession(ctx context.Context, deviceId string)
 		return "", nil, err
 	}
 
-	tokenExpiresAt := time.Now().Add(time.Hour * 24 * 7).UTC().Unix()
+	tokenExpiresAt := time.Now().Add(time.Hour * 24 * 7).UTC()
 	token, err := jwtauth.CreateJWTSession(
 		sessionId.String(),
 		deviceId,
@@ -39,7 +39,7 @@ func (s *AuthService) createNewUserSession(ctx context.Context, deviceId string)
 		ID:           sessionId.String(),
 		Subject:      deviceId,
 		RefreshToken: refreshToken.String(),
-		ExpiresAtUtc: tokenExpiresAt,
+		ExpiresAt:    tokenExpiresAt,
 		Type:         models.USER_TYPE,
 	}
 
@@ -57,7 +57,7 @@ func (s *AuthService) createNewDeviceSession(ctx context.Context, userId string)
 		return "", nil, err
 	}
 
-	tokenExpiresAt := time.Now().Add(time.Hour * 24 * 7 * 365).UTC().Unix()
+	tokenExpiresAt := time.Now().Add(time.Hour * 24 * 7 * 365).UTC()
 	token, err := jwtauth.CreateJWTSession(
 		sessionId.String(),
 		userId,
@@ -72,7 +72,7 @@ func (s *AuthService) createNewDeviceSession(ctx context.Context, userId string)
 		ID:           sessionId.String(),
 		Subject:      userId,
 		RefreshToken: refreshToken.String(),
-		ExpiresAtUtc: tokenExpiresAt,
+		ExpiresAt:    tokenExpiresAt,
 		Type:         models.DEVICE_TYPE,
 	}
 
@@ -102,7 +102,7 @@ func (s *AuthService) SessionIsValid(ctx context.Context, req *auth.SessionIsVal
 		}, nil
 	}
 
-	isValid := session.ExpiresAtUtc > time.Now().UTC().Unix()
+	isValid := session.ExpiresAt.Unix() > time.Now().UTC().Unix()
 
 	return &auth.SessionIsValidResponse{
 		IsValid: isValid,
@@ -133,7 +133,7 @@ func (s *AuthService) SignIn(ctx context.Context, req *auth.SignInRequest) (*aut
 		Session: &auth.UserSession{
 			Token:        token,
 			RefreshToken: sess.RefreshToken,
-			ExpiresAtUtc: sess.ExpiresAtUtc,
+			ExpiresAt:    sess.ExpiresAt.Format(time.RFC3339),
 			User:         user.AsProtoBuf(),
 		},
 	}, nil
@@ -194,7 +194,7 @@ func (s *AuthService) RefreshSession(ctx context.Context, req *auth.RefreshSessi
 		Session: &auth.UserSession{
 			Token:        token,
 			RefreshToken: sess.RefreshToken,
-			ExpiresAtUtc: sess.ExpiresAtUtc,
+			ExpiresAt:    sess.ExpiresAt.Format(time.RFC3339),
 			User:         user.AsProtoBuf(),
 		},
 	}, nil

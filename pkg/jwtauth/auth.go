@@ -49,13 +49,13 @@ func MapJWT(ctx context.Context) (context.Context, error) {
 	return metadata.NewIncomingContext(ctx, md), nil
 }
 
-func CreateJWTSession(id, subject string, expiresAt int64) (string, error) {
+func CreateJWTSession(id, subject string, expiresAt time.Time) (string, error) {
 	now := time.Now()
 	claims := &jwt.StandardClaims{
 		Id:        id,
 		IssuedAt:  now.Unix(),
 		NotBefore: now.Unix(),
-		ExpiresAt: expiresAt,
+		ExpiresAt: expiresAt.Unix(),
 		Subject:   subject,
 	}
 

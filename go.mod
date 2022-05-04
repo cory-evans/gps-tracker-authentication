@@ -6,7 +6,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
-	go.buf.build/grpc/go/corux/gps-tracker-auth v1.3.2
+	go.buf.build/grpc/go/corux/gps-tracker-auth v1.3.3
 	go.mongodb.org/mongo-driver v1.9.0
 	google.golang.org/grpc v1.46.0
 )

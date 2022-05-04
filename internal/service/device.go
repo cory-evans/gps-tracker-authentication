@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"time"
 
 	"github.com/cory-evans/gps-tracker-authentication/internal/models"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
@@ -72,7 +73,7 @@ func (s *AuthService) CreateDevice(ctx context.Context, req *auth.CreateDeviceRe
 		Token:        token,
 		Device:       dev.AsProtoBuf(),
 		RefreshToken: sess.RefreshToken,
-		ExpiresAtUtc: sess.ExpiresAtUtc,
+		ExpiresAt:    sess.ExpiresAt.Format(time.RFC3339),
 	}, err
 }
 
