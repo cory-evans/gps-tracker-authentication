@@ -49,7 +49,7 @@ func (s *AuthService) CreateDevice(ctx context.Context, req *auth.CreateDeviceRe
 		return nil, status.Error(codes.InvalidArgument, "Device name can't be none")
 	}
 
-	deviceID, err := uuid.NewUUID()
+	deviceID, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err
 	}

@@ -16,11 +16,11 @@ import (
 )
 
 func (s *AuthService) createNewUserSession(ctx context.Context, deviceId string) (string, *models.Session, error) {
-	sessionId, err := uuid.NewUUID()
+	sessionId, err := uuid.NewRandom()
 	if err != nil {
 		return "", nil, err
 	}
-	refreshToken, err := uuid.NewUUID()
+	refreshToken, err := uuid.NewRandom()
 	if err != nil {
 		return "", nil, err
 	}
@@ -49,11 +49,11 @@ func (s *AuthService) createNewUserSession(ctx context.Context, deviceId string)
 	return token, &sess, nil
 }
 func (s *AuthService) createNewDeviceSession(ctx context.Context, userId string) (string, *models.Session, error) {
-	sessionId, err := uuid.NewUUID()
+	sessionId, err := uuid.NewRandom()
 	if err != nil {
 		return "", nil, err
 	}
-	refreshToken, err := uuid.NewUUID()
+	refreshToken, err := uuid.NewRandom()
 	if err != nil {
 		return "", nil, err
 	}
